@@ -30,7 +30,6 @@
         private System.Windows.Forms.Button btnClearLog;
         private System.Windows.Forms.Label lblMt5Path;
         private System.Windows.Forms.CheckBox chkMinimizeMt5;
-        private System.Windows.Forms.Panel rightPanel;
 
         protected override void Dispose(bool disposing)
         {
@@ -105,17 +104,15 @@
                 ForeColor = System.Drawing.Color.Black,
                 BackColor = System.Drawing.Color.White
             };
-
-            // Criando o CheckBox dentro do GroupBox
+            
             chkMinimizeMt5 = new CheckBox()
             {
-                Text = "Minimizar MT5",  // Texto do CheckBox
-                Location = new System.Drawing.Point(388, 175),  // Posição do CheckBox dentro do GroupBox
+                Text = "Minimizar MT5",
+                Location = new System.Drawing.Point(388, 175),
                 AutoSize = true,
                 Font = new System.Drawing.Font("Arial", 8, System.Drawing.FontStyle.Regular)
             };
-
-            // Adicionando o CheckBox ao GroupBox
+            
             rightPanel.Controls.Add(chkMinimizeMt5);
             
             progressBar = new ProgressBar()
@@ -134,6 +131,13 @@
                 ReadOnly = true,
                 WordWrap = true
             };
+            
+            Button btnAbout = new Button() { 
+                Text = "Sobre", 
+                Location = new System.Drawing.Point(480, 710), 
+                Size = new System.Drawing.Size(90, 30) 
+            };
+            btnAbout.Click += BtnAbout_Click;
             
             this.Controls.Add(lblFolderPath);
             this.Controls.Add(txtFolderPath);
@@ -163,6 +167,7 @@
             this.Controls.Add(btnClearLog);
             this.Controls.Add(chkMinimizeMt5);
             this.Controls.Add(rightPanel);
+            this.Controls.Add(btnAbout);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace AutoBT_MT5
 {
     public partial class Form1
     {
-        private CancellationTokenSource? cancellationTokenSource;
+        private CancellationTokenSource? _cancellationTokenSource;
         private bool _isValisPath;
 
         public void BtnSelectFolder_Click(object sender, EventArgs e)
@@ -100,8 +100,8 @@ namespace AutoBT_MT5
                 btnStartBacktest.Enabled = false;
                 btnStopBacktest.Enabled = true;
                 
-                cancellationTokenSource = new CancellationTokenSource();
-                var token = cancellationTokenSource.Token;
+                _cancellationTokenSource = new CancellationTokenSource();
+                var token = _cancellationTokenSource.Token;
 
                 await Task.Run(() =>
                 {
@@ -110,8 +110,8 @@ namespace AutoBT_MT5
                     {
                         if (token.IsCancellationRequested)
                         {
-                            DateTime startTime = DateTime.Now;
-                            LogMessage($"Processo interrompido. {startTime:yyyy-MM-dd HH:mm:ss}");
+                            DateTime time = DateTime.Now;
+                            LogMessage($"Processo interrompido. {time:yyyy-MM-dd HH:mm:ss}");
                             break;
                         }
 
@@ -246,7 +246,7 @@ namespace AutoBT_MT5
                 string relativeEaPath =
                     eaFolderPath!.Replace(mql5ExpertsFolder, "").TrimStart(Path.DirectorySeparatorChar);
 
-                string basePath = userPath.Substring(0, userPath.IndexOf("MQL5"));
+                string basePath = userPath.Substring(0, userPath.IndexOf("MQL5", StringComparison.Ordinal));
                 string reportsFolder = Path.Combine(basePath, "Reports");
 
                 if (!Directory.Exists(reportsFolder))
@@ -283,7 +283,7 @@ namespace AutoBT_MT5
         private void BtnStopBacktest_Click(object sender, EventArgs e)
         {
             DateTime startTime = DateTime.Now;
-            cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Cancel();
             LogSeparator("##################################################################");
             LogMessage($"Processo interrompido {startTime:yyyy-MM-dd HH:mm:ss} , AGUARDE ...");
             LogSeparator("##################################################################");
@@ -328,7 +328,7 @@ namespace AutoBT_MT5
         {
             if (txtLog.InvokeRequired)
             {
-                txtLog.Invoke(new Action(() => { txtLog.AppendText(message + Environment.NewLine); }));
+                txtLog.Invoke(() => { txtLog.AppendText(message + Environment.NewLine); });
             }
             else
             {
@@ -352,7 +352,7 @@ namespace AutoBT_MT5
         {
             if (progressBar.InvokeRequired)
             {
-                progressBar.Invoke(new Action(() => { progressBar.Value = value; }));
+                progressBar.Invoke(() => { progressBar.Value = value; });
             }
             else
             {
@@ -404,6 +404,11 @@ namespace AutoBT_MT5
                 LogMessage($"Erro ao mover resultados: {ex.Message}");
             }
         }
+        
+        private void BtnAbout_Click(object sender, EventArgs e)
+        {
+            AboutForm aboutForm = new AboutForm();
+            aboutForm.ShowDialog();
+        }
     }
-    
 }
