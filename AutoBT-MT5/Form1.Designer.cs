@@ -6,7 +6,7 @@
         private System.Windows.Forms.TextBox txtFolderPath;
         private System.Windows.Forms.Button btnSelectFolder;
         private System.Windows.Forms.TextBox txtSymbol;
-        private System.Windows.Forms.ComboBox cmbTimeFrame;
+        private System.Windows.Forms.TextBox txtTimeFrame;
         private System.Windows.Forms.DateTimePicker dtpStartDate;
         private System.Windows.Forms.DateTimePicker dtpEndDate;
         private System.Windows.Forms.TextBox txtDeposit;
@@ -22,10 +22,12 @@
         private System.Windows.Forms.Button btnSelectOutputFolder;
         private System.Windows.Forms.Label lblOutputFolder;
         private System.Windows.Forms.Button btnStartBacktest;
+        private System.Windows.Forms.Button btnStopBacktest;
         private System.Windows.Forms.TextBox txtLog;
         private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.TextBox txtMt5Path;
         private System.Windows.Forms.Button btnSelectMt5Path;
+        private System.Windows.Forms.Button btnClearLog;
         private System.Windows.Forms.Label lblMt5Path;
 
         protected override void Dispose(bool disposing)
@@ -58,9 +60,7 @@
             txtSymbol = new TextBox() { Location = new System.Drawing.Point(120, 100), Width = 100 };
             
             lblTimeFrame = new Label() { Text = "Time Frame:", Location = new System.Drawing.Point(20, 140), AutoSize = true };
-            cmbTimeFrame = new ComboBox() { Location = new System.Drawing.Point(120, 140), Width = 100 };
-            cmbTimeFrame.Items.AddRange(new string[] { "M1", "M5", "M15", "M30", "H1", "H4", "D1", "W1", "MN1" });
-            cmbTimeFrame.SelectedItem = "M1";
+            txtTimeFrame = new TextBox() { Location = new System.Drawing.Point(120, 140), Width = 100 };
             
             lblStartDate = new Label() { Text = "Data Início:", Location = new System.Drawing.Point(20, 180), AutoSize = true };
             dtpStartDate = new DateTimePicker() { Location = new System.Drawing.Point(120, 180), Format = DateTimePickerFormat.Short };
@@ -86,6 +86,13 @@
             btnStartBacktest = new Button() { Text = "Iniciar Backtest", Location = new System.Drawing.Point(20, 380), Size = new System.Drawing.Size(150, 30) };
             btnStartBacktest.Click += BtnStartBacktest_Click;
             
+            btnStopBacktest = new Button() { Text = "Parar", Location = new System.Drawing.Point(180, 380), Size = new System.Drawing.Size(150, 30) };
+            btnStopBacktest.Click += BtnStopBacktest_Click;
+            btnStopBacktest.Enabled = false;
+            
+            btnClearLog = new Button() { Text = "Limpar Log", Location = new System.Drawing.Point(20, 710), Size = new System.Drawing.Size(150, 30) };
+            btnClearLog.Click += BtnClearLog_Click;
+            
             progressBar = new ProgressBar()
             {
                 Location = new System.Drawing.Point(20, 420),
@@ -96,7 +103,7 @@
             txtLog = new TextBox()
             {
                 Location = new System.Drawing.Point(20, 460),
-                Size = new System.Drawing.Size(550, 200),
+                Size = new System.Drawing.Size(550, 245),
                 Multiline = true,
                 ScrollBars = ScrollBars.Vertical,
                 ReadOnly = true,
@@ -112,7 +119,7 @@
             this.Controls.Add(lblSymbol);
             this.Controls.Add(txtSymbol);
             this.Controls.Add(lblTimeFrame);
-            this.Controls.Add(cmbTimeFrame);
+            this.Controls.Add(txtTimeFrame);
             this.Controls.Add(lblStartDate);
             this.Controls.Add(dtpStartDate);
             this.Controls.Add(lblEndDate);
@@ -125,8 +132,10 @@
             this.Controls.Add(txtMt5Path);
             this.Controls.Add(btnSelectMt5Path);
             this.Controls.Add(btnStartBacktest);
+            this.Controls.Add(btnStopBacktest);
             this.Controls.Add(progressBar);
             this.Controls.Add(txtLog);
+            this.Controls.Add(btnClearLog);
         }
     }
 }
