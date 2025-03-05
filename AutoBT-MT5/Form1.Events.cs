@@ -86,6 +86,8 @@ namespace AutoBT_MT5
                 LogSeparator();
                 LogMessage("Parametros carregados com sucesso.");
                 LogMessage($"Total de Experts encontrados na pasta: {eaFiles.Length}");
+                string log = chkMinimizeMt5.Checked ? "MT5 minimizado" : "MT5 não minimizado";
+                LogMessage($"{log}");
                 LogMessage("Iniciando processo...");
                 DateTime startTime = DateTime.Now;
                 LogMessage($"Processo iniciado em: {startTime:yyyy-MM-dd HH:mm:ss}");
@@ -184,7 +186,8 @@ namespace AutoBT_MT5
                     FileName = mt5ExecutablePath,
                     WorkingDirectory = mt5TerminalPath,
                     Arguments = arguments,
-                    UseShellExecute = true
+                    UseShellExecute = true,
+                    WindowStyle = chkMinimizeMt5.Checked ? ProcessWindowStyle.Minimized : ProcessWindowStyle.Normal
                 };
 
                 Process? mt5Process = Process.Start(processStartInfo);
@@ -281,7 +284,10 @@ namespace AutoBT_MT5
         {
             DateTime startTime = DateTime.Now;
             cancellationTokenSource?.Cancel();
+            LogSeparator("##################################################################");
             LogMessage($"Processo interrompido {startTime:yyyy-MM-dd HH:mm:ss} , AGUARDE ...");
+            LogSeparator("##################################################################");
+
             btnStartBacktest.Enabled = true;
             btnStopBacktest.Enabled = false;
         }
@@ -399,4 +405,5 @@ namespace AutoBT_MT5
             }
         }
     }
+    
 }
