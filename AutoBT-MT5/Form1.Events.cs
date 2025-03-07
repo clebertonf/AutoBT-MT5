@@ -38,7 +38,8 @@ namespace AutoBT_MT5
                 if (string.IsNullOrEmpty(txtFolderPath.Text) || !Directory.Exists(txtFolderPath.Text))
                 {
                     LogMessage("Por favor, selecione uma pasta contendo os EAs (.ex5).");
-                    MessageBox.Show("Por favor, selecione uma pasta contendo os EAs (.ex5).", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Por favor, selecione uma pasta contendo os EAs (.ex5).", "Erro",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                     LogSeparator();
                     return;
                 }
@@ -46,35 +47,39 @@ namespace AutoBT_MT5
                 if (string.IsNullOrEmpty(txtOutputFolder.Text) || !Directory.Exists(txtOutputFolder.Text))
                 {
                     LogMessage("Por favor, selecione uma pasta para salvar os resultados.");
-                    MessageBox.Show("Por favor, selecione uma pasta para salvar os resultados.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Por favor, selecione uma pasta para salvar os resultados.", "Erro",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                     LogSeparator();
                     return;
                 }
-                
+
                 if (string.IsNullOrEmpty(txtSymbol.Text))
                 {
                     LogMessage("Por favor, insira o simbolo do ativo.");
                     LogSeparator();
-                    MessageBox.Show("Por favor, insira o simbolo do ativo.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Por favor, insira o simbolo do ativo.", "Erro", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
                     return;
                 }
-                
+
                 if (string.IsNullOrEmpty(txtTimeFrame.Text))
                 {
                     LogMessage("Por favor, insira o timeframe");
                     LogSeparator();
-                    MessageBox.Show("Por favor, insira o timeframe", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Por favor, insira o timeframe", "Erro", MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
                     return;
                 }
-                
+
                 if (string.IsNullOrEmpty(txtMt5Path.Text) || !_isValisPath)
                 {
                     LogMessage("Por favor, selecione o diretório do MetaTrader 5 antes de iniciar o backtest.");
                     LogSeparator();
-                    MessageBox.Show("Por favor, selecione o diretório do MetaTrader 5 antes de iniciar o backtest.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Por favor, selecione o diretório do MetaTrader 5 antes de iniciar o backtest.",
+                        "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                
+
                 string[] eaFiles = Directory.GetFiles(txtFolderPath.Text, "*.ex5");
                 if (eaFiles.Length == 0)
                 {
@@ -82,7 +87,7 @@ namespace AutoBT_MT5
                     LogSeparator();
                     return;
                 }
-            
+
                 LogSeparator();
                 LogMessage("Parametros carregados com sucesso.");
                 LogMessage($"Total de Experts encontrados na pasta: {eaFiles.Length}");
@@ -92,14 +97,14 @@ namespace AutoBT_MT5
                 DateTime startTime = DateTime.Now;
                 LogMessage($"Processo iniciado em: {startTime:yyyy-MM-dd HH:mm:ss}");
                 LogSeparator();
-                
+
                 int totalFiles = eaFiles.Length;
                 progressBar.Maximum = totalFiles;
                 progressBar.Value = 0;
-                
+
                 btnStartBacktest.Enabled = false;
                 btnStopBacktest.Enabled = true;
-                
+
                 _cancellationTokenSource = new CancellationTokenSource();
                 var token = _cancellationTokenSource.Token;
 
@@ -116,31 +121,32 @@ namespace AutoBT_MT5
                         }
 
                         LogMessage($"Criando arquivo .ini para ==> {Path.GetFileName(eaFile)}");
-                        string iniFilePath = Path.Combine(txtOutputFolder.Text, Path.GetFileNameWithoutExtension(eaFile) + ".ini");
+                        string iniFilePath = Path.Combine(txtOutputFolder.Text,
+                            Path.GetFileNameWithoutExtension(eaFile) + ".ini");
                         CreateIniFile(iniFilePath, eaFile);
 
                         LogMessage($"Iniciando backtest para ==> {Path.GetFileName(eaFile)}");
                         StartBacktest(eaFile, iniFilePath);
-                        
+
                         completedBacktests++;
                         UpdateProgress(completedBacktests);
                         Thread.Sleep(1000);
                         LogSeparator();
                     }
-                    
+
                     DateTime endTime = DateTime.Now;
                     TimeSpan duration = endTime - startTime;
-                    
+
                     LogMessage($"Todos os backtests foram finalizados.");
                     LogMessage($"Total de Experts encontrados: {eaFiles.Length}");
                     LogMessage($"Total de backtests executados: {completedBacktests}");
                     LogMessage($"Processo finalizado em: {endTime:yyyy-MM-dd HH:mm:ss}");
                     LogMessage($"Tempo total decorrido: {duration.Hours}h {duration.Minutes}m {duration.Seconds}s");
-                    
+
                     LogMessage("Movendo resultados...");
                     MoveReportsFolder();
                     UpdateProgress(0);
-                    
+
                     btnStartBacktest.Enabled = true;
                     btnStopBacktest.Enabled = false;
                     btnClearLog.Enabled = true;
@@ -196,7 +202,7 @@ namespace AutoBT_MT5
                 {
                     mt5Process.WaitForExit();
                 }
-                
+
                 LogMessage($"Backtest finalizado ==> {Path.GetFileName(eaFilePath)}");
                 LogSeparator();
 
@@ -214,26 +220,32 @@ namespace AutoBT_MT5
             try
             {
                 string eaFileName = Path.GetFileName(eaFilePath);
-                string userPath = txtFolderPath.Text;
+                string userPath = txtFolderPath.Text.Trim();
 
-                string metaQuotesPath =
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MetaQuotes", "Terminal");
-
-                if (!Directory.Exists(metaQuotesPath))
+                if (string.IsNullOrEmpty(userPath) || !Directory.Exists(userPath))
                 {
-                    LogMessage("Erro: O diretório MetaQuotes\\Terminal não foi encontrado.");
+                    LogMessage("Erro: O caminho da pasta do terminal não é válido.");
+                    return;
+                }
+                
+                Match match = Regex.Match(userPath, @"MetaQuotes\\Terminal\\([A-Z0-9]+)", RegexOptions.IgnoreCase);
+                if (!match.Success)
+                {
+                    LogMessage("Erro: ID do terminal não encontrado no caminho.");
                     return;
                 }
 
-                string? terminalFolder = Directory.GetDirectories(metaQuotesPath)
-                    .FirstOrDefault(folder => Regex.IsMatch(Path.GetFileName(folder), @"^[A-Z0-9]+$"));
+                string terminalId = match.Groups[1].Value;
+                string terminalFolder =
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MetaQuotes",
+                        "Terminal", terminalId);
 
-                if (string.IsNullOrEmpty(terminalFolder))
+                if (!Directory.Exists(terminalFolder))
                 {
-                    LogMessage("Erro: Nenhuma pasta com ID dinâmico foi encontrada.");
+                    LogMessage("Erro: Pasta do terminal não encontrada.");
                     return;
                 }
-
+                
                 string mql5ExpertsFolder = Path.Combine(terminalFolder, "MQL5", "Experts");
 
                 if (!Directory.Exists(mql5ExpertsFolder))
@@ -241,21 +253,20 @@ namespace AutoBT_MT5
                     LogMessage("Erro: O diretório MQL5\\Experts não foi encontrado.");
                     return;
                 }
-
+                
                 string? eaFolderPath = Path.GetDirectoryName(eaFilePath);
                 string relativeEaPath =
                     eaFolderPath!.Replace(mql5ExpertsFolder, "").TrimStart(Path.DirectorySeparatorChar);
-
-                string basePath = userPath.Substring(0, userPath.IndexOf("MQL5", StringComparison.Ordinal));
-                string reportsFolder = Path.Combine(basePath, "Reports");
+                
+                string reportsFolder = Path.Combine(terminalFolder, "Reports");
 
                 if (!Directory.Exists(reportsFolder))
                 {
                     Directory.CreateDirectory(reportsFolder);
                 }
 
+                // Monta o conteúdo do arquivo .ini
                 StringBuilder iniContent = new StringBuilder();
-
                 iniContent.AppendLine("[Tester]");
                 iniContent.AppendLine($"Expert={Path.Combine(relativeEaPath, eaFileName)}");
                 iniContent.AppendLine($"Symbol={txtSymbol.Text}");
@@ -268,7 +279,7 @@ namespace AutoBT_MT5
                 iniContent.AppendLine("Model=1");
                 iniContent.AppendLine($"Report=Reports/{eaFileName}.html");
                 iniContent.AppendLine("ShutdownTerminal=1");
-
+                
                 File.WriteAllText(iniFilePath, iniContent.ToString());
 
                 LogMessage($"Arquivo .ini criado: {iniFilePath}");
@@ -279,6 +290,7 @@ namespace AutoBT_MT5
                 LogSeparator();
             }
         }
+
 
         private void BtnStopBacktest_Click(object sender, EventArgs e)
         {
@@ -364,33 +376,49 @@ namespace AutoBT_MT5
         {
             try
             {
-                string metaQuotesPath =
-                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MetaQuotes", "Terminal");
+                string selectedPath = txtFolderPath.Text.Trim();
 
-                if (!Directory.Exists(metaQuotesPath))
+                if (string.IsNullOrEmpty(selectedPath) || !Directory.Exists(selectedPath))
                 {
-                    LogMessage("Erro: O diretório MetaQuotes\\Terminal não foi encontrado.");
+                    LogMessage("Erro: O caminho da pasta do terminal não é válido.");
                     return;
                 }
 
-                string? reportsFolder = Directory.GetDirectories(metaQuotesPath)
-                    .FirstOrDefault(folder => Regex.IsMatch(Path.GetFileName(folder), @"^[A-Z0-9]+$"));
-
-                if (string.IsNullOrEmpty(reportsFolder))
+                Match match = Regex.Match(selectedPath, @"MetaQuotes\\Terminal\\([A-Z0-9]+)", RegexOptions.IgnoreCase);
+                if (!match.Success)
                 {
-                    LogMessage("Erro: Nenhuma pasta de resultados foi encontrada.");
+                    LogMessage("Erro: ID do terminal não encontrado no caminho.");
                     return;
                 }
 
-                string sourceFolder = Path.Combine(reportsFolder, "Reports");
+                string terminalId = match.Groups[1].Value;
+
+                string terminalFolder =
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MetaQuotes",
+                        "Terminal", terminalId);
+
+                if (!Directory.Exists(terminalFolder))
+                {
+                    LogMessage("Erro: Pasta do terminal não encontrada.");
+                    return;
+                }
+
+                string reportsFolder = Path.Combine(terminalFolder, "Reports");
                 string destinationFolder = Path.Combine(txtOutputFolder.Text, "Reports");
+
+                if (!Directory.Exists(reportsFolder))
+                {
+                    LogMessage("Erro: Pasta de relatórios não encontrada.");
+                    return;
+                }
 
                 if (!Directory.Exists(destinationFolder))
                 {
                     Directory.CreateDirectory(destinationFolder);
                 }
 
-                foreach (string file in Directory.GetFiles(sourceFolder))
+                // Mover arquivos
+                foreach (string file in Directory.GetFiles(reportsFolder))
                 {
                     string destinationFile = Path.Combine(destinationFolder, Path.GetFileName(file));
                     File.Move(file, destinationFile, true);
@@ -404,7 +432,7 @@ namespace AutoBT_MT5
                 LogMessage($"Erro ao mover resultados: {ex.Message}");
             }
         }
-        
+
         private void BtnAbout_Click(object sender, EventArgs e)
         {
             AboutForm aboutForm = new AboutForm();
