@@ -4,7 +4,7 @@
 AutoBT_MT5 e uma ferramenta desenvolvida para automatizar e facilitar a execucao de backtests no MetaTrader 5. O software permite a execucão de testes em massa, otimizando o processo de avaliacao de estrategias de trading.
 
 ## Atualizações
-✅ 03/03/2025 - Primeira versão.
+✅ 03/03/2025 - Primeira versão. </br>
 ✅ 06/03/2025 - Bug corrigido onde se usuario tiver mais de um mt5 instalado na maquina o programa não realizava o back teste corretamente.
 
 ## Funcionalidades
