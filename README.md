@@ -1,11 +1,15 @@
 # AutoBT_MT5 - Automacao de Backtest para o MetaTrader 5
 
 ## Descricão
-AutoBT_MT5 e uma ferramenta desenvolvida para automatizar e facilitar a execucao de backtests no MetaTrader 5. O software permite a execucao de testes em massa, otimizando o processo de avaliacao de estrategias de trading.
+AutoBT_MT5 e uma ferramenta desenvolvida para automatizar e facilitar a execucao de backtests no MetaTrader 5. O software permite a execucão de testes em massa, otimizando o processo de avaliacao de estrategias de trading.
+
+## Atualizações
+- 03/03/2025 - Primeira versão.
+- 06/03/2025 - Bug corrigido onde se usuario tiver mais de 1 mt5 instalado na maquina o programa não realizava o back teste corretamente.
 
 ## Funcionalidades
-- **Selecao de EAs:** Permite escolher a pasta contendo os Expert Advisors (EAs) que serao testados.
-- **Selecao de pasta para resultados:** Define o local onde os resultados .html dos backtests serao armazenados.
+- **Selecao de EAs:** Permite escolher a pasta contendo os Expert Advisors (EAs) que serão testados.
+- **Selecao de pasta para resultados:** Define o local onde os resultados .html dos backtests serão armazenados.
 - **Configuracao de ativos e timeframes:** Permite definir o ativo e o periodo de tempo para os testes.
 - **Configuracao de periodo de testes:** Define a data de inicio e fim dos backtests.
 - **Definicao de deposito inicial e moeda:** Ajusta o capital inicial e a moeda utilizada nos testes.
@@ -13,12 +17,12 @@ AutoBT_MT5 e uma ferramenta desenvolvida para automatizar e facilitar a execucao
 - **Opcoes adicionais:**: Possui opcoes para minimizar o MetaTrader 5 durante a execucao dos backtests.
 - **Execucao de backtest em massa:** Testa automaticamente todos os EAs presentes na pasta selecionada.
 - **Gerenciamento de logs:** Registra informacoes sobre a execucao dos backtests e permite limpar os logs facilmente.
-- **Janela "Sobre":** Exibe informacoes sobre o software, incluindo links para documentacao e licenca.
+- **Janela "Sobre":** Exibe informacoes sobre o software, incluindo links para documentação e licença.
 
 ## Como Usar
 1. Escolha a pasta contendo os **Expert Advisors**, essa pasta deve ser **obrigatoriamente sua pasta de perfil do MT5**, normalmente no caminho: **C:\Users\seu usuário\AppData\Roaming\MetaQuotes\Terminal\seu ID\MQL5\Experts**
    - Exemplo: **C:\Users\Cleber\AppData\Roaming\MetaQuotes\Terminal\FB9A56D617EDDDFE29EE54EBEFFE96C1\MQL5\Experts**
-   - **Atenção: O MT5 não consegue executar back testes com Eas fora da pasta do perfil. Caso seus Eas estejam em outra pasta o backtest não será realziado.**
+   - **Atenção: O MT5 não consegue executar back testes com Eas fora da pasta do perfil. Caso seus Eas estejam em outra pasta o backtest não será realizado.**
 3. Defina a pasta de destino para os resultados.
 4. Configure o ativo, timeframe e periodo do backtest.
 5. Ajuste o valor do deposito inicial e a moeda.
