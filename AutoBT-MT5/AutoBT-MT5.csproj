@@ -9,4 +9,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Arquivo mais recente .exe para download\" />
+    </ItemGroup>
+
 </Project>
