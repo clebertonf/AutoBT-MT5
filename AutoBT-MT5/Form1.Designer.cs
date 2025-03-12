@@ -30,6 +30,7 @@
         private System.Windows.Forms.Button btnClearLog;
         private System.Windows.Forms.Label lblMt5Path;
         private System.Windows.Forms.CheckBox chkMinimizeMt5;
+        private System.Windows.Forms.CheckBox chkMt5PortableMode;
 
         protected override void Dispose(bool disposing)
         {
@@ -113,7 +114,17 @@
                 Font = new System.Drawing.Font("Arial", 8, System.Drawing.FontStyle.Regular)
             };
             
+            chkMt5PortableMode = new CheckBox()
+            {
+                Text = "MT5-Portable",
+                Location = new System.Drawing.Point(388, 198),
+                AutoSize = true,
+                Font = new System.Drawing.Font("Arial", 8, System.Drawing.FontStyle.Regular)
+            };
+            
             rightPanel.Controls.Add(chkMinimizeMt5);
+            rightPanel.Controls.Add(chkMt5PortableMode);
+
             
             progressBar = new ProgressBar()
             {
@@ -166,6 +177,7 @@
             this.Controls.Add(txtLog);
             this.Controls.Add(btnClearLog);
             this.Controls.Add(chkMinimizeMt5);
+            this.Controls.Add(chkMt5PortableMode);
             this.Controls.Add(rightPanel);
             this.Controls.Add(btnAbout);
         }
